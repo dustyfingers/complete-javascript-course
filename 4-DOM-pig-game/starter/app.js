@@ -14,12 +14,22 @@ var scores, roundScore, activePlayer;
 scores = [0, 0];
 roundScore = 0;
 activePlayer = 0;
-
-
 document.getElementById('score-0').textContent = 0;
 document.getElementById('score-1').textContent = 0;
 document.getElementById('current-0').textContent = 0;
 document.getElementById('current-1').textContent = 0;
+
+
+function nextPlayer() {
+    // next player
+    activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
+    roundScore = 0;
+    document.getElementById('current-0').textContent = 0;
+    document.getElementById('current-1').textContent = 0;
+    document.querySelector(`.player-0-panel`).classList.toggle('active');
+    document.querySelector(`.player-1-panel`).classList.toggle('active');
+    document.querySelector('.dice').style.display = 'none';
+}
 
 
 document.querySelector('.btn-roll').addEventListener('click', function() {
@@ -39,13 +49,28 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
         roundScore += dice;
         document.querySelector(`#current-${activePlayer}`).textContent = roundScore;
     } else {
-        // next player
-        activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
-        roundScore = 0;
-        document.getElementById('current-0').textContent = 0;
-        document.getElementById('current-1').textContent = 0;
-        document.querySelector(`.player-0-panel`).classList.toggle('active');
-        document.querySelector(`.player-1-panel`).classList.toggle('active');
-        document.querySelector('.dice').style.display = 'none';
+        nextPlayer();
     }
+});
+
+document.querySelector('.btn-hold').addEventListener('click', function() {
+    // 1. add currentScore to players global score
+    scores[activePlayer] += roundScore;
+
+    // 2. update ui 
+    document.querySelector(`#score-${activePlayer}`).textContent = scores[activePlayer];
+
+    // 3. check if player won game
+    if (scores[activePlayer] >= 100) {
+        document.querySelector(`#name-${activePlayer}`).textContent = 'WINNER!';
+        document.querySelector(`.dice`).style.display = 'none';
+        document.querySelector(`.player-${activePlayer}-panel`).classList.add('winner');
+        document.querySelector(`.player-${activePlayer}-panel`).classList.remove('active');
+    } else {
+        nextPlayer();
+    }
+});
+
+document.querySelector('.btn-new').addEventListener('click', function() {
+
 });
