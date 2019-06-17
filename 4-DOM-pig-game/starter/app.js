@@ -12,6 +12,7 @@ GAME RULES:
 var scores, roundScore, activePlayer, gamePlaying;
 
 init();
+var lastDice;
 
 
 function init() {
@@ -58,13 +59,19 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
         diceDOM.src = `dice-${dice}.png`;
 
         // 3. update the roundScore if rolled number !== 1
-        if (dice !== 1) {
+        if (dice === 6 && lastDice === 6) {
+            //player loses score if roll 2 sixes in a row
+            scores[activePlayer] === 0;
+            document.querySelector(`#score-${activePlayer}`).textContent = '0';
+            nextPlayer();
+        } else if (dice !== 1) {
             // add score
             roundScore += dice;
             document.querySelector(`#current-${activePlayer}`).textContent = roundScore;
         } else {
             nextPlayer();
         }
+        lastDice = dice;
     }
 
 });
