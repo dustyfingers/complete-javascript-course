@@ -46,8 +46,20 @@ function nextPlayer() {
     document.querySelector('.dice').style.display = 'none';
 }
 
+function playerWins() {
+    document.querySelector(`#name-${activePlayer}`).textContent = 'WINNER!';
+    document.querySelector(`.dice`).style.display = 'none';
+    document.querySelector(`.player-${activePlayer}-panel`).classList.add('winner');
+    document.querySelector(`.player-${activePlayer}-panel`).classList.remove('active');
+    gamePlaying = false;
+}
 
-document.querySelector('.btn-roll').addEventListener('click', function() {
+function setWinningScore(score) {
+    return score ? score : 100;
+}
+
+
+document.querySelector('.btn-roll').addEventListener('click', function () {
     //anonymous func: you dont need to reference it anywhere else!
     if (gamePlaying) {
         // 1. make dice random number
@@ -76,7 +88,7 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
 
 });
 
-document.querySelector('.btn-hold').addEventListener('click', function() {
+document.querySelector('.btn-hold').addEventListener('click', function () {
     if (gamePlaying) {
         // 1. add currentScore to players global score
         scores[activePlayer] += roundScore;
@@ -84,16 +96,10 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
         // 2. update ui 
         document.querySelector(`#score-${activePlayer}`).textContent = scores[activePlayer];
 
+        var input = document.querySelector('.final-score').value;
+        var winningScore = setWinningScore(input);
         // 3. check if player won game
-        if (scores[activePlayer] >= 100) {
-            document.querySelector(`#name-${activePlayer}`).textContent = 'WINNER!';
-            document.querySelector(`.dice`).style.display = 'none';
-            document.querySelector(`.player-${activePlayer}-panel`).classList.add('winner');
-            document.querySelector(`.player-${activePlayer}-panel`).classList.remove('active');
-            gamePlaying = false;
-        } else {
-            nextPlayer();
-        }
+        scores[activePlayer] >= winningScore ? playerWins() : nextPlayer();
     }
 });
 
